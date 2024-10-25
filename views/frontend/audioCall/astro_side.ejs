@@ -1,0 +1,783 @@
+<%- include('../header') %>
+  <div class="vc">
+        
+<a href="#" style="display:none" class="count hide-cls " id="global_time">00:00</a>
+
+        <div class="sub-vc rounded shadow-lg">
+
+            <div class="vc-head">
+                    <p>Astologer Side</p>
+                    <div timer  class="timer">Time remain : <span id='timer'></span></div>
+            </div>
+
+            <p id="leaveing_message" class="leave"></p>
+
+            <i class="fa fa-microphone-slash" id="muted_mic" aria-hidden="true " style="color: red; display: none;"></i>
+          
+            <div id="remote" class="rounded remote shaow-lg"><p id="nameShow" class="circle"></p></div>
+            
+            <div class="vc-plugs">
+    
+                <i class="fa fa-microphone " id="btnMic" aria-hidden="true "></i>
+
+                <!-- <button type="button" id="join">Join</button> -->
+                <button type="button" id="leave">Leave</button>
+            </div>
+        </div>
+
+         <div class="personal_details" >
+
+        <p>Name: <span id="user_name"></span></p>
+        <p>Birth Place: <span id="birthPlace"></span></p>   
+        <p>Birth Date: <span id="birthDate"></span></p>   
+        <p>Birth Time: <span id="birthtime"></span></p>  
+        <p>Gender: <span id="gender"></span></p>  
+        <p>Relationship status: <span id="relationship_status"></span></p>   
+        <p id="pn">Partners Name: <span id="partnersName"></span></p>
+        <p id="pb">Partners Birth Date: <span id="partnersbirthDate"></span></p>
+        <p id="pbt">Partners Birth Time: <span id="partnersbirthtime"></span></p>
+        <p id="pbp">Partners Birth Place: <span id="partners_birthPlace"></span></p>
+
+    </div>        
+
+
+        <button onclick="whole_kundali();match_kundali()" type="button" class="btn btn-primary kundali_btn" data-bs-toggle="modal" data-bs-target="#myModal">Kundali</button>
+
+        <button type="button" id = "get_wqit_list" class="btn btn-primary  waitlist hide-cls" onclick="get_waitlist_user()"  data-bs-toggle="modal" data-bs-target="#waitlistModal" >
+
+                    <i class="fa-solid fa-clock-rotate-left"></i>Waitlist
+
+                    <span
+
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger show_waitlist_count" id="wait_btn">
+
+                        0
+                    </span>
+
+           </button>
+
+    </div>
+    
+    <!--modal-->
+        
+      <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">Kundali</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+             <div id="show_user_kundlii"></div>
+             <div id="match_new_kundli"></div>
+            </div>
+           </div>
+          </div>
+      </div>
+      
+    <!--end modal section-->
+    
+    <!---   waitlist MODEL -->
+
+<div class="modal fade" id="waitlistModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-md modal-dialog-centered">
+
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Waitlist</h1>
+
+                                <button type="button" class="btn-close wait-close" data-bs-dismiss="modal"
+
+                                    aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+
+                            </div>
+
+                            <div class="modal-body" id="mytable">
+
+               
+                            </div>
+
+                           
+
+                        </div>
+
+                    </div>
+
+</div>
+
+<!--- END waitlist MODEL -->
+    <script>
+    
+       const currentUrl = window.location.pathname;
+    
+    let parse_url = currentUrl.split('/');
+    
+    let txt = parse_url[2];
+    
+    let numb = txt.match(/\d/g);
+    
+        numb = numb.join("");
+     
+    let uid = parseInt(numb);
+    
+    let channelName = parse_url[3];
+    
+    let session_name = JSON.stringify({
+        
+            channel_name: channelName,
+    }); 
+    
+    
+     // timer
+    
+    
+         let totalSeconds = "";
+
+         let request_status = "";
+
+         let fiveMinutes  = "";
+  
+    let getSessionDetails = function session_details(){
+        axios.post('https://astroera.in/api/astro-call/exportSessionDetails',session_name,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(async function(response)  {
+            
+                totalSeconds = await(Math.floor((response.data.total_time)*60));
+               
+                fiveMinutes = await totalSeconds;
+               
+                request_status = await (response.data.request_status);
+
+
+                if(request_status == 5){
+                    window.location.href="https://astroera.in/";
+                }else if(request_status == 7){
+                    window.location.href="https://astroera.in/";
+                }else if(request_status == 8){
+                    window.location.href="https://astroera.in/";
+                }else{
+                    await startOneToOneAudioCall();
+                    await astroJoin();
+                }
+             
+                 document.getElementById('user_name').innerHTML = await JSON.parse(JSON.stringify(response.data.form_meta.fullname));
+
+                 let userStripName = await JSON.parse(JSON.stringify(response.data.form_meta.fullname));
+
+                 document.getElementById('nameShow').innerHTML = await (userStripName.substring(0, 1));
+              
+                 document.getElementById('birthPlace').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.birthPlace));
+
+                   const dateString = await JSON.parse(JSON.stringify(response.data.form_meta.birthDate));
+                   const datetoc = new Date(dateString);
+                   const daytoc = String(datetoc.getDate()).padStart(2, '0');
+                   const monthNamestoc = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+                   const monthtoc = monthNamestoc[datetoc.getMonth()];
+                   const yeartoc = datetoc.getFullYear();
+                   const formattedDate = `${daytoc}-${monthtoc}-${yeartoc}`;
+
+                        document.getElementById('birthDate').innerHTML = formattedDate;
+
+                    const time24 = await JSON.parse(JSON.stringify(response.data.form_meta.birthtime))
+               const [hours, minutes] = time24.split(':').map(Number);
+               const suffix = hours >= 12 ? 'PM' : 'AM';
+               const hours12 = hours % 12 || 12;
+               const minutesFormatted = String(minutes).padStart(2, '0');
+               const frtime = `${hours12}:${minutesFormatted} ${suffix}`;                             
+
+                 document.getElementById('birthtime').innerHTML = frtime;
+                 document.getElementById('gender').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.gender));
+                 document.getElementById('relationship_status').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.relationship_status));
+                
+                 let relation_ship = "";
+                
+                     relation_ship = await ((response.data.form_meta.partner_check));
+                     
+                     if(relation_ship == 1){
+                      
+                           document.getElementById('partnersName').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partnersName));
+                           document.getElementById('partnersbirthDate').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partnersbirthDate));
+                           document.getElementById('partners_birthPlace').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partners_birthPlace));
+
+                               const time244 = await JSON.parse(JSON.stringify(response.data.form_meta.partnersbirthtime));
+                               const [hourss, minutess] = time244.split(':').map(Number);
+                               const suffixx = hourss >= 12 ? 'PM' : 'AM';
+                               const hours122 = hourss % 12 || 12;
+                               const minutesFormattedd = String(minutess).padStart(2, '0');
+                               const frtimee = `${hours122}:${minutesFormattedd} ${suffixx}`;
+
+                           document.getElementById('partnersbirthtime').innerHTML = frtimee;
+                        
+                     }else{
+                        
+                           document.getElementById('pn').style.display = "none";
+                           document.getElementById('pb').style.display = "none";
+                           document.getElementById('pbt').style.display = "none"; 
+                           document.getElementById('pbp').style.display = "none";
+                           document.getElementById('match_new_kundli').style.display = "none";
+                     }
+                
+                
+            })
+    }
+    
+    
+  getSessionDetails();  
+    
+    
+
+    
+const config = {
+    mode: 'rtc',
+    codec: 'vp8'
+}
+
+const options = {
+    appId: '1e884982f1bf494495b45d0812f047de',
+    channel: channelName,
+    token: "",
+    uid: uid,
+
+}
+
+// Retrieve a token from your token server
+
+    
+    let data = JSON.stringify({
+            uid: uid,
+            channel: channelName,
+            role: 'publisher',
+            tokentype: 'uid',
+    });
+    
+    
+    
+      let gettingdata = function getData(){
+          const res = axios.post('/fetch_rtc_token',data , {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          })
+        return (res.then(async (response)=> {
+                 let token = response.data.rtcToken;
+                 options.token = token;
+                  
+            }))
+        }
+     
+     gettingdata();
+
+                    
+     function get_waitlist_user() {
+
+           axios.post('https://astroera.in/api/get-wait-list-user',{
+
+                "sessiion_id": channelName,
+
+                "call_type": "chat"
+
+            },{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((data)=>{
+
+
+                $('#mytable').html('');
+
+                var myArray = data.data;
+
+                var student = '';
+
+
+
+                // ITERATING THROUGH OBJECTS 
+
+                $.each(myArray, function (key, value) {
+                      console.log(value.type);
+                     if (value.type === 'Chat') {
+
+                        var datas1 = "'" + value.session_id + "','" + value.type + "'";
+
+                          student+='<ul class="modal-ul" id="wait_call_' + value.session_id + '"> <li><p>' + value.user_name +'</p><div class="btn-grp"><button onclick="chnage_user_new_call(' + datas1 + ')" class="acc"><i class="fa-solid fa-message"></i></button><button class="dec" onclick="cancle_waitlist_user(' + datas1 + ')"><i class="fa-solid fa-xmark"></i></button></div></li></ul>';   
+
+                    }
+
+                    
+
+                     if (value.type === 'Calling') {
+
+                        var datas1 = "'" + value.session_id + "','" + value.type + "'";
+
+                          student+='<ul class="modal-ul" id="wait_call_' + value.session_id + '"> <li><p>' + value.user_name +'</p><div class="btn-grp"><button onclick="chnage_user_new_call(' + datas1 + ')" class="acc"><i class="fa-solid fa-phone"></i></button><button class="dec" onclick="cancle_waitlist_user(' + datas1 + ')"><i class="fa-solid fa-xmark"></i></button></div></li></ul>';   
+
+                    }
+
+                     if (value.type === 'Video') {
+
+                        var datas1 = "'" + value.session_id + "','" + value.type + "'";
+
+                          student+='<ul class="modal-ul" id="wait_call_' + value.session_id + '"> <li><p>' + value.user_name +'</p><div class="btn-grp"><button onclick="chnage_user_new_call(' + datas1 + ')" class="acc"><i class="fa-solid fa-video"></i></button><button class="dec" onclick="cancle_waitlist_user(' + datas1 + ')"><i class="fa-solid fa-xmark"></i></button></div></li></ul>';   
+
+                    }
+
+                });
+
+                //INSERTING ROWS INTO TABLE  
+
+                $('#mytable').append(student);
+
+            },
+
+       );
+
+
+
+
+
+    }
+
+
+   //cancle wait list 
+
+
+     function cancle_waitlist_user(z) {
+
+        $('#wait_call_' + z).hide();
+
+         
+         axios.post('https://astroera.in/api/cancel-waitlist-user',{
+
+                  "session_id": z,
+
+            },{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((data)=>{
+
+               $('.show_waitlist_count').html(data.data);
+
+              });
+          
+           }
+   
+
+   // accept wait list 
+
+
+      function chnage_user_new_call(x, y) {
+
+
+
+        if (y === 'Chat') {
+
+            var new_url = 'https://astroera.in/expert/chat-room/' + x;
+
+        }
+
+        if (y === 'Calling') {
+
+            var new_url = 'https://astroera.in/voice-calling-session?roomID=' + x + '&role=Host';
+
+        }
+        
+        if (y === 'Video'){
+            
+           var new_url  = `https://svng.in/astro/VID${uid}/${x}`;
+      
+        }
+
+
+        var e = channelName;
+
+        var o = 'Host';
+
+        var t = 'roomLeave';
+
+        Swal.fire({
+
+            title: "Leave Room",
+
+            text: "Are you sure you want to chnage room?",
+
+            icon: "warning",
+
+            showCancelButton: true,
+
+            confirmButtonColor: "#3085d6",
+
+            cancelButtonColor: "#d33",
+
+            confirmButtonText: "Yes!"
+
+        }).then((result) => {
+
+            if (result.isConfirmed) {
+
+                setTimeout(function () {
+
+                    const r = 'https://astroera.in';
+
+                    console.log("post init");
+
+                    var n = new FormData();
+
+                    n.append("session_id", e),
+
+                        n.append("user_role", o),
+
+                        n.append("roomEntryType", t);
+
+                    var a = new XMLHttpRequest();
+
+                    (a.onreadystatechange = function () {
+
+                        window.location.assign(new_url);
+
+                    }),
+
+                        a.open("post", r + "/api/call-status"),
+
+                        a.send(n);
+
+                }, 3000);
+
+
+
+            }
+
+        });
+
+    }
+
+     
+
+  //waitlistcount 
+
+
+    setInterval(function () {
+
+
+          axios.post('https://astroera.in/api/astro-video_wait-list',{
+
+                "sessiion_id": channelName,
+
+                "call_type": "chat"
+
+            },{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((data)=>{         
+                  
+               $('.show_waitlist_count').html(data.data);
+
+              });
+
+        }, 2000);
+       
+
+
+
+
+     
+    //  astro room join
+     
+    let astro_update_join = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "Host",
+            roomEntryType: 'roomEnter',
+    }); 
+     
+    let astroJoin = async function astro_join(){
+        axios.post('https://astroera.in/api/astro-call/status-update',astro_update_join,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+    
+   // cancle call
+
+
+      function astro_leave_call(session_id_call){
+        axios.post('https://astroera.in/api/astro-call/status-update',{
+                  
+            "session_id": session_id_call,
+           "user_role": "Host",
+            "roomEntryType": 'roomLeave'
+             },{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+      }
+
+
+    
+    // astro_room_leave
+    
+     let astro_update_leave = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "Host",
+            roomEntryType: 'roomLeave',
+    }); 
+     
+    let astroLeave =async function astro_leave(){
+        axios.post('https://astroera.in/api/astro-call/status-update',astro_update_leave,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(()=>{
+            window.location.href="https://astroera.in/";
+        })
+    }
+     
+
+const rtc = {
+            client: null,
+            localAudioTrack: null,
+        }
+        
+        const leavebtn = $('#leave');
+        // const joinbtn = $('#join');
+        const btnMic = $('#btnMic');
+        
+        const join = async() => {
+            rtc.client = AgoraRTC.createClient(config);
+            await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+        }
+        
+        async function startOneToOneAudioCall() {
+            join().then(() => {
+                
+                startAudio();
+
+                 setTimeout(()=>{
+
+                            if(rtc.client._users.length == 1){
+                                console.log("one user is there");
+                              }else{
+                                window.location.href="https://astroera.in/";
+                               }
+                             },180000);
+
+                rtc.client.on('user-published', async(user, mediaType) => {
+
+                    document.getElementById('muted_mic').style.display = 'none';
+
+                    // if (rtc.client._users.length > 1) {
+                    //     rtc.client.leave();
+                    //     remote.html('<div class="roomMessage"><p class="full">Please Wait Room is Full</p></div>');
+                    //     return;
+                    // } else {
+                    //     remote.html('');
+                    // }
+                    
+        
+                    await rtc.client.subscribe(user, mediaType);
+                            
+                        if(totalSeconds !== ""){
+                          
+                              if(user.uid){
+                                     
+                                    display = $('#timer');
+                                    startTimernew(fiveMinutes, display);
+
+                                 }
+                              
+                          }else{
+                              
+                            setTimeout(function(){
+
+                              if(user.uid){
+
+                                     display = $('#timer');
+                                     startTimernew(fiveMinutes, display);
+                              }
+
+                            },9000);
+                          }
+                        
+                    
+                    
+                    if (mediaType === 'audio') {
+                        const remoteAudioTrack = user.audioTrack;
+                        remoteAudioTrack.play()
+                    }
+
+                    
+                    rtc.client.on("user-left",(f,g)=>{
+                    
+                        if(g === 'Quit'){
+                     
+                          setTimeout(()=>{astroLeave();},1000);
+       
+                         document.getElementById('leaveing_message').innerHTML = "User left";
+
+                        }
+                    
+                 });
+                    
+                  rtc.client.on("user-unpublished",async (user) => {
+
+                     await rtc.client.unsubscribe(user);
+
+                     document.getElementById('muted_mic').style.display = 'inline';
+
+                 });
+                    
+                });
+            });
+        }
+        
+        
+        const startAudio = async() => {
+            rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            rtc.client.publish(rtc.localAudioTrack);
+            rtc.localAudioTrack.play();
+        }
+         
+        const stopAudio = () => {
+            rtc.localAudioTrack.close();
+            rtc.localAudioTrack.stop();
+            rtc.client.unpublish(rtc.localAudioTrack);
+        }
+        
+        leavebtn.click( async function(){
+
+        rtc.localAudioTrack.close();
+        await rtc.client.leave();
+        astroJoin();
+
+        });
+
+        // joinbtn.click( async function(){
+        
+        // if(request_status == 5){
+        //         window.location.href="https://astroera.in/";
+        //     }else if(request_status == 7){
+        //         window.location.href="https://astroera.in/";
+        //     }else if(request_status == 8){
+        //         window.location.href="https://astroera.in/";
+        //     }else{
+        //         startOneToOneAudioCall();
+        //         astroJoin();  
+        //     }
+        
+        // });
+      
+      //  Toggle Microphone
+
+        btnMic.click(function() {
+            if ($(this).hasClass('fa-microphone')) {
+                $(this).addClass('fa-microphone-slash');
+                $(this).removeClass('fa-microphone');
+                $(this).css('color', 'red');
+                stopAudio()
+        
+            } else {
+                $(this).addClass('fa-microphone');
+                $(this).removeClass('fa-microphone-slash');
+                $(this).css('color', 'white');
+                startAudio();
+            }
+        });
+      
+        
+         var minutes;
+         var seconds;
+          
+            let startTime = function () {
+                                
+                minutes = parseInt(totalSeconds / 60, 10);
+                seconds = parseInt(totalSeconds % 60, 10);
+                minutes = minutes < 10 ? minutes : minutes;
+                seconds = seconds < 10 ? seconds : seconds;
+                
+                document.getElementById('timer').innerHTML = (`${minutes} minutes : ${seconds} seconds`);
+                
+                if (--totalSeconds < 0) {
+                    
+                    rtc.client.leave();
+                    stopAudio();
+                    
+                    astroLeave();
+                    
+                    console.log("timer goes -ve");
+                    
+                   return ;
+                    
+                }
+            }
+                
+                
+        function startTimer() {
+          intervalId = setInterval(startTime,1000);
+        }
+        
+        
+        function clearTimer() {
+          clearInterval(intervalId);
+        }
+        
+        
+         let whole_kundali = function getkund(){
+             
+             axios.post('/getkundl',{
+                    headers: {
+                     'Content-Type': 'application/json'
+                 }
+             }).then((response)=>{
+                 
+                 document.getElementById('show_user_kundlii').innerHTML = response.data;
+                
+             })
+          }
+
+          let match_kundali = function getmatch_kund(){
+
+             axios.post('/getmatchmaking',{
+                    headers: {
+                     'Content-Type': 'application/json'
+                 }
+             }).then((response)=>{
+
+                 document.getElementById('match_new_kundli').innerHTML = response.data;
+                
+             })
+          }
+        
+function startTimernew(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10)
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                
+                display.text(minutes + ":" + seconds);
+                if (--timer < 0) {
+                    timer = duration;
+                    astroLeave();
+                }
+              
+            }, 1000);
+        }
+   </script>
+   
+   <%- include('../kundali/kundali') %>
+
+<%- include('../footer') %>

@@ -1,0 +1,306 @@
+  
+
+  //match making start from here
+
+
+
+    <div class="tab-content" id="myTabContent">
+       
+        
+        <div class="tab-pane fade show active border p-2 border-warning" id="match_kundali" role="tabpanel"
+            aria-labelledby="match_kundali-tab">
+            <div class="row">
+                <h2 class="text-center p-3">Match Making Kundli</h2>
+                <nav>
+                <ul class="nav nav-tabs tabflx  mt-5" id="myTab" role="tablist">
+              
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link tabsdes" id="match_astro_detailss-tab" onclick="match_basic_details()"  data-bs-toggle="tab" href="#match_astro_detailss" type="button"
+                            role="tab" aria-controls="match_astro_details" aria-selected="false"
+                             data-open="false">
+                             Basic Details
+                        </button>
+                    </li>
+                     <li class="nav-item" role="presentation" >
+                        <button class="nav-link tabsdes" id="match_ashtakoot_points-tab" onclick="askoot_askoot()" data-bs-toggle="tab" href="#match_ashtakoot_points" type="button"
+                            role="tab" aria-controls="match_ashtakoot_points" aria-selected="false"
+                             data-open="false">
+                             Ashtakoot Points
+                        </button>
+                    </li>
+
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link tabsdes" id="match_planet_detailss-tab" onclick="match_planetss()" data-bs-toggle="tab" href="#match_planet_detailss" type="button"
+                            role="tab" aria-controls="match_planet_details" aria-selected="false"
+                             data-open="false">
+                            Planet Details
+                        </button>
+                    </li>
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link tabsdes" id="match_charts-tab" onclick="match_charts()" data-bs-toggle="tab" href="#match_charts" type="button"
+                            role="tab" aria-controls="match_charts" aria-selected="false"
+                             data-open="false">
+                            Charts
+                        </button>
+                    </li>
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link tabsdes" id="match_manglik_reportss-tab" onclick="match_making_manglik()" data-bs-toggle="tab" href="#match_manglik_reportss" type="button"
+                            role="tab" aria-controls="match_manglik_report" aria-selected="false"
+                             data-open="false">
+                            Manglik Report
+                        </button>
+                    </li>
+                     <li class="nav-item" role="presentation">
+                        <button class="nav-link tabsdes" id="match_dashakoot_pointss-tab" data-bs-toggle="tab" onclick="daskoot_new()"  href="#match_dashakoot_pointss" type="button"
+                            role="tab" aria-controls="match_dashakoot_points" aria-selected="false"
+                             data-open="false">
+                            Dashakoot Points
+                        </button>
+                    </li>
+                </ul>
+                </nav>
+                 <div class="tab-content" id="myTabContent">
+                  
+
+
+                    <div class="tab-pane fade border p-2 border-warning" id="match_birth_detailss" role="tabpanel"
+                        aria-labelledby="match_birth_detailss-tab">
+               
+                            <div class="row">
+                                <div class="col-md-12 col-12">
+                                <div class="card mb-3">
+                                    <div class="card-header bg-warning bg-opacity-50">
+                                       Match Birth Details
+                                    </div>
+                                    <div class="card-body">
+                                        
+                                            <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                    <tr>
+                                                        <th>Details</th>
+                                                        <th>Male</th>
+                                                        <th>Female</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="match_birth_detail">
+                                                    </tbody>
+                                            </table>
+                                       
+                                    </div>
+            
+                                </div>
+                              </div>
+                            </div>
+                </div>
+                <div class="tab-pane fade border border-warning  p-2" id="match_ashtakoot_points" role="tabpanel"
+                        aria-labelledby="match_ashtakoot_points-tab">
+                        <div class="row">
+                            
+                            <div class="col-md-12 col-12" id="">
+                                <input type="hidden" id="matchastkootpointnew">
+                                 <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                    <tr>
+                                                        <th>Guna</th>
+                                                        <th>Maximum</th>
+                                                        <th>Obtained</th>
+                                                        <th>Aria Of Life</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="astkootnewprint"></tbody>
+                                    </table>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane fade border show active border-warning  p-2" id="match_astro_detailss" role="tabpanel"
+                        aria-labelledby="match_astro_detailss-tab">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-6 col-12"> 
+                                <div class="card mb-3">
+                                    <div class="card-header bg-warning bg-opacity-50">
+                                       Match Basic Details
+                                      </div>
+                                    <div class="card-body">
+                                        <input type="hidden" id="matching_basicdetailsnew">
+                                            <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                    <tr>
+                                                        <th>Details</th>
+                                                        <th>Male</th>
+                                                        <th>Female</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="match_astro_detailsspartner1">
+                                                    </tbody>
+                                                <tbody id="match_astro_detailsspartner2">
+                                                    </tbody>
+                                            </table>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane fade border border-warning  p-2" id="match_planet_detailss" role="tabpanel"
+                        aria-labelledby="match_planet_detailss-tab">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-6 col-12">
+                        
+                                    <div class="card mt-2">   
+                                        
+                                        <div class="card-body" id="">
+                                            <div class="card-body">
+                                        <input type="hidden" id="matchplanet_hidden">
+                                            <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                     <tr><th>Partner 1</th></tr>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Full degree</th>
+                                                        <th>Speed</th>
+                                                        <th>Is retro</th>
+                                                        <th>Sign</th>
+                                                        <th>Rashi lord</th>
+                                                        <th>Nakshatra</th>
+                                                        <th>Nakshatra lord</th>
+                                                        <th>Nakshatra pada</th>
+                                                        <th>House</th>
+                                                        <th>Awastha</th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody id="match_planet_details">
+                                                </tbody>
+                                            </table>
+                                            
+                                            <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                     <tr><th>Partner 2</th></tr>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>Full degree</th>
+                                                        <th>Speed</th>
+                                                        <th>Is retro</th>
+                                                        <th>Sign</th>
+                                                        <th>Rashi lord</th>
+                                                        <th>Nakshatra</th>
+                                                        <th>Nakshatra lord</th>
+                                                        <th>Nakshatra pada</th>
+                                                        <th>House</th>
+                                                        <th>Awastha</th>
+                                                    </tr>
+                                                </thead>
+                                                
+                                                <tbody id="match_planet_details2">
+                                                </tbody>
+                                            </table>
+                                       
+                                    </div>
+                
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                </div>
+                <div class="tab-pane fade border border-warning  p-2" id="match_charts" role="tabpanel"
+                        aria-labelledby="match_charts-tab">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-6 col-12" >
+                                <div class="card mb-3" >
+                                   <div class="card-header bg-warning bg-opacity-50" style="text-align:center;">
+                                       Moon
+                                      </div>
+                                    <div class="card-body" style="display: contents;">
+                                        
+                                            <table>
+                                               <thead>
+                                                   <tr><th>full_name change later</th><th>female_name change later</th></tr><tr>
+                                               </thead>
+                                                <tbody id="matchmoonchart">
+                                                </tbody>
+                                            </table>
+                                       
+                                    </div>
+                                </div>
+                                <div class="card mb-3" >
+                                   <div class="card-header bg-warning bg-opacity-50" style="text-align:center;">
+                                       Lagna
+                                      </div>
+                                    <div class="card-body" style="display: contents;">
+                                        
+                                            <table>
+                                               <thead>
+                                                   <tr><th>full_name change later</th><th>female_name change later</th></tr><tr>
+                                               </thead>
+                                                <tbody id="match_lagnachart">
+                                                </tbody>
+                                            </table>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                
+                 <div class="tab-pane fade border border-warning  p-2" id="match_manglik_reportss" role="tabpanel"
+                        aria-labelledby="match_manglik_reportss-tab">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-6 col-12">
+                                 <div class="card mb-3">
+                                    <div class="card-header bg-warning bg-opacity-50">
+                                       Manglik
+                                      </div>
+                                    <div class="card-body" id="match_manglik_reports">
+                                        <input type="hidden" id="match_manglik_hidden">
+                                       <table class="table table-striped">
+                                                      <thead class="table-warning">
+                                                          <tr>
+                                                              <th>Manglik</th>
+                                                              <th>Male</th>
+                                                              <th>Female</th>
+                                                            </tr>
+                                                        </thead>
+                                                <tbody id="match_manglicknew">
+                                                </tbody>        
+                                       
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                
+                 <div class="tab-pane fade border border-warning  p-2" id="match_dashakoot_pointss" role="tabpanel"
+                        aria-labelledby="match_dashakoot_pointss-tab">
+                        <div class="row">
+                            <div class="col-md-12 col-sm-6 col-12">
+                                <div class="card mb-3">
+                                   <div class="card-header bg-warning bg-opacity-50">
+                                       Dashakoot
+                                      </div>
+                                      <input type="hidden" id="new_hidden_daskoot">
+                                      <table class="table table-striped">
+                                                 <thead class="table-warning">
+                                                    <tr>
+                                                        <th>Guna</th>
+                                                        <th>Maximum</th>
+                                                        <th>Obtained</th>
+                                                        <th>Aria Of Life</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="match_dashakoot_points">
+                                                </tbody>
+                                       
+                                        </table>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                </div>
+                
+                
+                
+            </div>
+        </div>
+        
+</div>

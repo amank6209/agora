@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<head>
+  
+  <title>Video call</title>
+  
+  <link rel="stylesheet" href="https://agoraastro.astroera.in/views/video_call.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://download.agora.io/sdk/release/AgoraRTC_N-4.22.0.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"> </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  
+</head>
+
+<body>
+    
+  <h1>Video Calling</h1>
+  <p>User Side</p>
+  
+  
+    <div timer  class=timer>Time remain : <span id='timer'></span></div>
+    <p id="leaveing_message"></p>
+    
+  <div class="d-flex justify-content-center w-100 p-2">
+      
+        <div class="p-2 rounded shadow-lg position-relative">
+            <div id="local" class="d-flex p-1 justify-content-center rounded position-absolute local shadow-lg "></div>
+            
+            <div id="remote" class="d-flex p-1 justify-content-center rounded remote shaow-lg "></div>
+            <div class="d-flex justify-content-center">
+                
+                <i class="fa fa-video-camera" id="btnCam" aria-hidden="true "></i>
+                <i class="fa fa-microphone " id="btnMic" aria-hidden="true "></i>
+                <i class="fa fas fa-plug" id="btnPlug" aria-hidden="true"></i>
+            </div>
+        </div>
+
+    </div>
+    
+    <div>
+        
+        <h5>My Details</h5>
+        <p>Name: <span id="user_name"></span></p>
+        <p>Customer mobile: <span id="customer_mobile"></span></p>
+        <p>Customer query: <span id="customer_query"></span></p>
+        <p>BirthPlace: <span id="birthPlace"></span></p>
+        <p>BirthDate: <span id="birthDate"></span></p>
+        <p>Birthtime: <span id="birthtime"></span></p>
+        <p>Gender: <span id="gender"></span></p>
+        <p>Relationship status: <span id="relationship_status"></span></p>
+        <p id="pn">Partners Name: <span id="partnersName"></span></p>
+        <p id="pb">Partners BirthDate: <span id="partnersbirthDate"></span></p>
+        <p id="pbt">Partners Birthtime: <span id="partnersbirthtime"></span></p>
+        <p id="pbp">Partners BirthPlace: <span id="partners_birthPlace"></span></p>
+        <p>Occupation: <span id="occupation"></span></p>
+        <p>Latitude: <span id="latitude"></span></p>
+        <p>Longitude: <span id="longitude"></span></p>
+        <p>Timezone: <span id="timezone"></span></p>
+        
+    </div>
+  
+  
+    <script>
+    
+    const currentUrl = window.location.pathname;
+    
+    let parse_url = currentUrl.split('/');
+    
+    let txt = parse_url[3];
+    
+    let numb = txt.match(/\d/g);
+    
+        numb = numb.join("");
+    
+    let uid = parseInt(numb);
+    
+    let channelName = parse_url[4];
+    
+     let session_name = JSON.stringify({
+        
+            channel_name: channelName,
+    }); 
+    
+    
+    
+    let totalSeconds = "";
+  
+ function startTimer() {
+            var timer = totalSeconds, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10)
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                
+                document.getElementById('timer').innerHTML = (`${minutes} minutes : ${seconds} seconds`);
+                
+                if (--timer < 0) {
+                    
+                   userLeave();
+                   clearInterval(startTimer);
+                   
+                }
+              
+            }, 1000);
+        }
+
+
+    
+    
+    
+    let getSessionDetails = function session_details(){
+        axios.post('https://astroera.in/api/astro-call/exportSessionDetails',session_name,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(async function(response)  {
+            
+            totalSeconds = await(Math.floor((response.data.total_time)*60));
+            // await console.log(totalSeconds);
+                document.getElementById('user_name').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.fullname));
+                document.getElementById('customer_mobile').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.customer_mobile));
+                document.getElementById('customer_query').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.customer_query));
+                document.getElementById('birthPlace').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.birthPlace));
+                document.getElementById('birthDate').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.birthDate));
+                document.getElementById('birthtime').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.birthtime));
+                document.getElementById('gender').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.gender));
+                document.getElementById('relationship_status').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.relationship_status));
+                
+                let relation_ship = "";
+                
+                    relation_ship = await JSON.parse(JSON.stringify(response.data.form_meta.partner_check));
+                    
+                    if(relation_ship){
+                        
+                           document.getElementById('partnersName').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partnersName));
+                           document.getElementById('partnersbirthDate').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partnersbirthDate));
+                           document.getElementById('partners_birthPlace').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partners_birthPlace));
+                           document.getElementById('partnersbirthtime').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.partnersbirthtime));
+                        
+                    }else{
+                        
+                           document.getElementById('pn').style.display = "none";
+                           document.getElementById('pb').style.display = "none";
+                           document.getElementById('pbt').style.display = "none"; 
+                           document.getElementById('pbp').style.display = "none";
+                    }
+                
+                document.getElementById('occupation').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.occupation));
+                document.getElementById('latitude').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.latitude));
+                document.getElementById('longitude').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.longitude));
+                document.getElementById('timezone').innerHTML =await JSON.parse(JSON.stringify(response.data.form_meta.timezone));
+                 
+                 
+            })
+    }
+
+getSessionDetails();
+
+
+const config = {
+    mode: 'rtc',
+    codec: 'vp8'
+}
+
+const options = {
+    appId: '1e884982f1bf494495b45d0812f047de',
+    channel: channelName,
+    token: "",
+    uid: uid,
+
+}
+
+// Retrieve a token from your token server
+
+    
+    let data = JSON.stringify({
+            uid: uid,
+            channel: channelName,
+            role: 'publisher',
+            tokentype: 'uid',
+    });
+    
+    
+    
+      let gettingdata = function getData(){
+          const res = axios.post('/fetch_rtc_token',data , {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          })
+        return (res.then(async function(response){
+                 let token = response.data.rtcToken;
+                 options.token = token;
+                // await startOneToOneVideoCall();
+                // await userJoin();
+                
+                 
+            }))
+        }
+     
+     gettingdata();
+     
+     
+     //  user room join
+     
+    let user_update_join = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "User",
+            roomEntryType: 'roomEnter',
+    }); 
+     
+    let userJoin = function user_join(){
+        axios.post('https://astroera.in/api/astro-call/status-update',user_update_join,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+    
+    
+    // user_room_leave
+    
+     let user_update_leave = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "User",
+            roomEntryType: 'roomLeave',
+    }); 
+     
+    let userLeave = function user_leave(){
+        axios.post('https://astroera.in/api/astro-call/status-update',user_update_leave,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(()=>{
+            // window.location.href="https://astroera.in/";
+        })
+    }
+     
+
+const rtc = {
+            client: null,
+            localVideoTrack: null,
+            localAudioTrack: null,
+        }
+        
+        const btnCam = $('#btnCam');
+        const btnMic = $('#btnMic');
+        const btnPlug = $('#btnPlug');
+        const remote = $('#remote');
+        const local = $('#local');
+        
+        const join = async() => {
+            rtc.client = AgoraRTC.createClient(config);
+            await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+        }
+        
+        async function startOneToOneVideoCall() {
+            join().then(() => {
+                
+                startVideo();
+                startAudio();
+                
+                rtc.client.on('user-published', async(user, mediaType) => {
+                    
+                    if (rtc.client._users.length > 1) {
+                        rtc.client.leave();
+                        remote.html('<div class="roomMessage"><p class="full">Please Wait Room is Full</p></div>');
+                        return;
+                    } else {
+                        remote.html('');
+                    }
+                    
+                    await (rtc.client.subscribe(user, mediaType)).then(()=>{
+                        
+                        if(user.uid){
+                            startTimer();
+                        }
+                    });
+        
+                    await rtc.client.subscribe(user, mediaType);
+                    
+                    if (mediaType === 'video') {
+                        const remoteVideoTrack = user.videoTrack;
+                        remoteVideoTrack.play('remote');
+        
+                    }
+                    if (mediaType === 'audio') {
+                        const remoteAudioTrack = user.audioTrack;
+                        remoteAudioTrack.play()
+                    }
+                });
+                
+                
+                 rtc.client.subscribe(user, mediaType).then(()=>{
+                        
+                        if (mediaType === 'video') {
+                            const remoteVideoTracks = user.videoTrack;
+                            remoteVideoTracks.play('remote');
+                         }
+                         if (mediaType === 'audio') {
+                             const remoteAudioTracks = user.audioTrack;
+                             remoteAudioTracks.play()
+                         }
+                        
+                    });
+                
+                
+                rtc.client.on("user-unpublished", (user) => {
+                    
+                    clearInterval(startTimer);
+                    
+                    userLeave();
+                    
+                    document.getElementById('leaveing_message').innerHTML = "Astrologer leave the Call";
+                    
+                    // setTimeout(()=>{
+                    //     window.location.href="https://astroera.in/";
+                    // },3000);
+                    
+                    
+                    //  console.log("user leave",user.uid);
+                 });
+                
+                
+                });
+            
+                
+        }
+        
+        
+            
+        
+        
+        const startVideo = async() => {
+            rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+            rtc.client.publish(rtc.localVideoTrack);
+            rtc.localVideoTrack.play('local');
+        }
+        
+        const startAudio = async() => {
+            rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            rtc.client.publish(rtc.localAudioTrack);
+            rtc.localAudioTrack.play();
+        }
+        
+        const stopVideo = () => {
+            rtc.localVideoTrack.close();
+            rtc.localVideoTrack.stop();
+            rtc.client.unpublish(rtc.localVideoTrack);
+        }
+        
+        const stopAudio = () => {
+            rtc.localAudioTrack.close();
+            rtc.localAudioTrack.stop();
+            rtc.client.unpublish(rtc.localAudioTrack);
+        }
+        
+        
+        //Toggle Camera
+        
+        btnCam.click(function() {
+            if ($(this).hasClass('fa-video-camera')) {
+                $(this).addClass('fa-video-slash');
+                $(this).removeClass('fa-video-camera');
+                $(this).css('color', 'red');
+                stopVideo();
+        
+            } else {
+                $(this).addClass('fa-video-camera');
+                $(this).removeClass('fa-video-slash');
+                $(this).css('color', 'black');
+                startVideo();
+        
+            }
+        });
+        //Toggle Microphone
+        btnMic.click(function() {
+            if ($(this).hasClass('fa-microphone')) {
+                $(this).addClass('fa-microphone-slash');
+                $(this).removeClass('fa-microphone');
+                $(this).css('color', 'red');
+                stopAudio()
+        
+            } else {
+                $(this).addClass('fa-microphone');
+                $(this).removeClass('fa-microphone-slash');
+                $(this).css('color', 'black');
+                startAudio();
+        
+        
+            }
+        });
+        
+        //Toggle Join and Leave
+        
+        
+        btnPlug.click(function() {
+               if ($(this).hasClass('fas fa-plug')) {
+                $(this).addClass('fa-window-close');
+                $(this).removeClass('fas fa-plug');
+                $(this).css('color', 'red');
+                startOneToOneVideoCall();
+                userJoin();
+                
+               }else{
+                $(this).addClass('fas fa-plug');
+                $(this).removeClass('fa-window-close');
+                $(this).css('color', 'black');
+        
+                rtc.client.leave();
+                stopVideo();
+                stopAudio();
+                userLeave();
+                
+            //   window.location.href="https://astroera.in/";
+               }
+        });
+</script>
+  
+</body>
+
+</html>

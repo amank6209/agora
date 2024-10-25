@@ -1,0 +1,393 @@
+<%- include('../header') %>
+ 
+   <style>
+
+* {
+    font-family: sans-serif;
+}
+h1, h4, p {
+    text-align: center;
+}
+.full {
+    flex:1
+}
+button {
+    padding: 8px 32px;
+    background-color: #0c9efd;
+    color: #fff;
+    border-width: 0;
+    margin: 0 8px 0 0;
+    border-radius: 4px;
+}
+button:disabled {
+    background-color: #0c9efd55;
+}
+input {
+    border-width: 0px;
+    border-bottom: black 1px solid;
+    padding: 4px 8px;
+}
+input:focus {
+    outline: 0px;
+    border-bottom: #0c9efd 2px solid;
+}
+#remote-container1 video {
+    height: auto;
+    position: relative !important;
+}
+#remote-container2 video {
+    height: auto;
+    position: relative !important;
+}
+#me {
+    position: relative;
+    width: 50%;
+    margin: 0 auto;
+    display: block;
+}
+#me video {
+    position: relative !important;
+}
+#remote-container-main {
+    display: flex;
+}
+#remote-container1 {
+    flex: 1;
+    display: flex;
+}
+#remote-container2 {
+    flex: 1;
+    display: flex;
+}
+#error {
+    color: red;
+}
+.btn-container {
+    display: flex;
+    flex-direction: row;
+    width: max-content;
+    margin: 0 auto
+}
+small {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+
+   </style> 
+    
+
+    <div style="display:flex">
+        <div class="full">
+            <h4 class="full">Public webinar</h4>
+            <div class="btn-container">
+                <button id="start1">Start</button>
+                <button id="stop1" disabled>Stop</button>
+                <button id="accept_normal" disabled style="display: none;" onclick="normalcallaccept()">Accept</button>
+                <p id="show_message_normal" style="display: none;">You have a new Request Click Accept Button to Interact with user</p>
+            </div>
+        </div>
+        <div class="full">
+            <h4 class="full">Private webinar user</h4>
+            <div class="btn-container">
+                <a onclick="acceptPrivate()"><button id="start2"  disabled >Start</button></a>
+                <button id="stop2" disabled>Stop</button>
+                <p id="show_message" style="display: none;">You have a new Private Request Click Start Button to Interact with Private user</p>
+            </div>
+        </div>
+    </div>
+    <div id="remote-container-main">
+        <div class="full">
+            <h4>My Camera</h4>
+            <div id="me"></div>
+            <h4 class="full"></h4>
+            <div id="remote-container1"></div>
+        </div>
+        <div class="full">
+            <h4>Remote User</h4>
+            <div id="remote-container2"></div>
+        </div>
+    </div>
+    
+    
+<script>
+    
+    const currentUrl = window.location.pathname;
+    
+    let parse_url = currentUrl.split('/');
+
+    let txt = parse_url[2];
+ 
+    let numb = txt.match(/\d/g);
+    
+        numb = numb.join("");
+     
+    let uid = parseInt(numb);
+    
+    let channelName = parse_url[3];
+    
+     let session_name = JSON.stringify({
+        
+            channel_name: channelName,
+    }); 
+
+
+    var channelName2 = "";
+
+    setInterval(function () {
+
+
+axios.post('https://astroera.in/api/astro-webinar-check',{
+
+      "expert_id": options.uid,
+  },{
+     headers: {
+      'Content-Type': 'application/json'
+  }
+}).then((data)=>{         
+
+    if(data.data.data != null){
+
+        // private call
+
+        if(data.data.form_meta == "Private call"){
+            channelName2 = data.data.data.request_session_id;
+            if(data.data.data.request_status == 1){
+                
+            const enableButton = document.getElementById('start2');
+            enableButton.disabled = false;
+            const flash_Message = document.getElementById('show_message').style.display = "inline";
+            }else{
+                const enableButton = document.getElementById('start2');
+                enableButton.disabled = true;
+                const flash_Message = document.getElementById('show_message').style.display = "none";
+            }
+         }else{
+            const enableButton = document.getElementById('start2');
+            enableButton.disabled = true;
+            const flash_Message = document.getElementById('show_message').style.display = "none";
+         }
+
+
+        // normal call request
+
+         if(data.data.form_meta == "Normal call"){
+            channelName2 = data.data.data.request_session_id;
+            if(data.data.data.request_status == 1){   
+            const enableButton = document.getElementById('accept_normal');
+            enableButton.disabled = false;
+            document.getElementById('accept_normal').style.display = "inline";
+            document.getElementById('show_message_normal').style.display = "inline";
+            }else{
+                const enableButton = document.getElementById('accept_normal');
+                enableButton.disabled = true;
+                document.getElementById('accept_normal').style.display = "none";
+                document.getElementById('show_message_normal').style.display = "none";
+            }
+         }else{
+            const enableButton = document.getElementById('accept_normal');
+            enableButton.disabled = true;
+            document.getElementById('accept_normal').style.display = "none";
+         }
+    }else{
+            const enableButton = document.getElementById('start2');
+            enableButton.disabled = true;
+            document.getElementById('show_message').style.display = "none";
+            document.getElementById('show_message_normal').style.display = "none";
+            document.getElementById('accept_normal').style.display = "none";
+    }
+     
+
+    });
+
+}, 2000);
+
+  
+function acceptPrivate(){
+
+    alert(channelName2);
+
+          const res = axios.post('https://astroera.in/api/astro-accept-private-webinar',{
+            "session_id": channelName2,
+            "astro_id":options.uid,
+            "type" : "Private call"
+          },{
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then((e)=>{
+
+            //  console.log("Sended data",accept_private_call);
+
+          })
+        }
+
+
+function normalcallaccept(){
+
+            const res = axios.post('https://astroera.in/api/astro-accept-private-webinar',{
+              "session_id": channelName2,
+              "astro_id":options.uid,
+              "type": "Normal call"
+            },{
+                   headers: {
+                  'Content-Type': 'application/json'
+              }
+            }).then((e)=>{
+            
+            //    console.log("Sended data",accept_private_call);
+            
+            })
+        }
+
+
+let options = {
+    appId: '1e884982f1bf494495b45d0812f047de',
+    channel: channelName,
+    channel2: channelName2,
+    token: null,
+    uid: uid,
+};
+
+
+document.getElementById("start1").onclick = async function () {
+    const clientOne = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    clientOne.setClientRole("host");
+    
+    const [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+    localVideoTrack.play('me');
+    initStopOne(clientOne, localAudioTrack, localVideoTrack);
+
+    clientOne.on("user-published", async (user, mediaType) => {
+        await clientOne.subscribe(user, mediaType);
+        if (mediaType === "video") {
+            let remoteContainer = document.getElementById("remote-container1");
+            addVideoContainer(String(user.uid), remoteContainer)
+            user.videoTrack.play(String(user.uid));
+        }
+        if (mediaType === "audio") {
+            user.audioTrack.play();
+        }
+    });
+    clientOne.on("user-unpublished", async (user, mediaType) => {
+        if (mediaType === "video") {
+            removeVideoContainer(user.uid)
+        }
+
+        remote_user_id = user.uid;
+            const res = axios.post('https://astroera.in/api/user-leave-webinar',{
+                "uid":remote_user_id,
+                "channel":channelName2,
+                "type":'Webinar Leave'
+                }, {
+                   headers: {
+                  'Content-Type': 'application/json'
+                }
+            })
+
+    });
+    const _uid = await clientOne.join(options.appId, options.channel, options.token, options.uid);
+     await clientOne.publish([localAudioTrack, localVideoTrack]);
+
+};
+
+
+document.getElementById("start2").onclick = async function () {
+    
+    const clientTwo = AgoraRTC.createClient({ mode: "live", codec: "vp8" });
+    clientTwo.setClientRole("host");
+    const [localAudioTrack, localVideoTrack] = await AgoraRTC.createMicrophoneAndCameraTracks();
+    initStopTwo(clientTwo);
+
+    clientTwo.on("user-published", async (user, mediaType) => {
+        await clientTwo.subscribe(user, mediaType); 
+        if (mediaType === "video") {
+            let remoteContainer2 = document.getElementById("remote-container2");
+            addVideoContainer(String(user.uid + '-c2'), remoteContainer2)
+            user.videoTrack.play(String(user.uid + '-c2'));
+        }
+        if (mediaType === "audio") {
+            user.audioTrack.play();
+        }
+    });
+    clientTwo.on("user-unpublished", async (user, mediaType) => {
+        if (mediaType === "video") {
+            removeVideoContainer(user.uid+ '-c2');
+        }
+
+        //remote user leave update
+
+            remote_user_id = user.uid;
+            const res = axios.post('https://astroera.in/api/user-leave-webinar',{
+                "uid":remote_user_id,
+                "channel":channelName2,
+                "type":'Webinar Leave'
+                }, {
+                   headers: {
+                  'Content-Type': 'application/json'
+                }
+            })
+        
+    });
+
+    const _uid2 = await clientTwo.join(options.appId, channelName2, options.token, options.uid);
+    await clientTwo.publish([localAudioTrack, localVideoTrack]);
+};
+
+
+function initStopOne(client, localAudioTrack, localVideoTrack) {
+    const stopBtn = document.getElementById('stop1');
+    stopBtn.disabled = false;
+    document.getElementById("start1").disabled = true;
+    stopBtn.onclick = function () {
+        client.unpublish(); 
+        localVideoTrack.stop();
+        localVideoTrack.close();
+        localAudioTrack.stop();  
+        localAudioTrack.close(); 
+        client.remoteUsers.forEach(user => {
+            if (user.hasVideo) {
+                removeVideoContainer(user.uid) 
+            }
+            client.unsubscribe(user); 
+        });
+        client.removeAllListeners(); 
+        stopBtn.disabled = true;
+        document.getElementById("start1").disabled = false;
+    }
+}
+
+function initStopTwo(client) {
+    const stopBtn = document.getElementById('stop2');
+    stopBtn.disabled = false;
+    document.getElementById("start2").disabled = true;
+    stopBtn.onclick = function () {
+        client.unpublish(); 
+        client.remoteUsers.forEach(user => {
+            if (user.hasVideo) {
+                removeVideoContainer(user.uid + '-c2')
+            }
+            client.unsubscribe(user);
+        });
+        client.removeAllListeners();
+        stopBtn.disabled = true;
+        document.getElementById("start2").disabled = false;
+    }
+}
+
+function addVideoContainer(uid, container) {
+    let streamDiv = document.createElement("div"); 
+    streamDiv.id = uid;                      
+    streamDiv.style.transform = "rotateY(180deg)"; 
+    container.appendChild(streamDiv);      
+}
+
+function removeVideoContainer(uid) {
+    let remDiv = document.getElementById(uid);
+    remDiv && remDiv.parentNode.removeChild(remDiv);
+}
+
+        
+</script>
+  
+<%- include('../footer') %>

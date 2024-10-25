@@ -1,0 +1,264 @@
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4;
+  color: #333;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+h1 {
+  color: #0066cc;
+}
+
+p {
+  font-size: 1.2em;
+  color: #000;
+}
+
+.local {
+    width: 80px;
+    height: 80px;
+    background-color: white;
+    top: 70px;
+    right: 60px;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    padding: 5px;
+}
+
+.remote {
+    width: 100%;
+    background-color: transparent;
+    height: 470px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+/*.fa,*/
+/*.fas {*/
+/*    font-size: 32px;*/
+/*    padding: 10px 25px;*/
+/*}*/
+
+.full {
+    font-size: 24px;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.roomMessage {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background: burlywood;
+    justify-content: center;
+}
+
+.remote_user_video {
+    position: absolute;
+    top: 14%;
+    left: 14%;
+    width: 72% !important;
+    height: 72% !important;
+}
+
+.vc {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+}
+
+.sub-vc {
+    position: relative;
+    padding: 10px;
+    width: 80%;
+    background: #000;
+}
+
+.vc-head {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 30px;
+}
+
+.vc-head p {
+    margin: 0;
+    color: #fff;
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.leave {
+    position: absolute;
+    top: 50%;
+    left: 40%;
+    color: #ff0000;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+.vc-plugs {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.vc-plugs i {
+    cursor: pointer;
+    color: #fff;
+    font-size: 32px;
+    text-align: center;
+    height: auto;
+    padding: 10px 25px;
+}
+
+.timer {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.timer span {
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/**************** Kundali Css **************************/
+
+.bg-light {
+    background-color: transparent !important;
+}
+
+div#nav-tabContent {
+    background-color: transparent !important;
+}
+
+div#nav-tab {
+    width: 80%;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin: 5px auto;
+}
+
+.nav-btns {
+    justify-content: space-evenly;
+}
+.nav-tabs {
+    border-bottom: 0 solid #dee2e6 !important;
+    margin: 0 auto;
+    width: 70%;
+}
+
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color: #f77b25;
+    background-color: #fff;
+    border-bottom: 2px solid #f77d26 !important;
+    border: none;
+}
+
+.nav-btns button {
+    color: #000;
+    width: 100%;
+    height: 40px;
+    font-size: 14px;
+    font-weight: 600;
+    border-bottom: 2px solid #eee !important;
+    margin: 0;
+}
+
+.nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    border: none;
+    isolation: isolate;
+    border-bottom: 2px solid #ffa571 !important;
+    color: #ffa571;
+}
+
+.bg-light {
+    background-color: transparent !important;
+}
+
+.rrboxarea {
+    position: relative;
+    overflow: hidden;
+    border-radius: 25px 25px 0 0;
+    margin-bottom: 25px;
+}
+
+.rrboxarea span {
+    position: relative;
+    background-color: #f77a26;
+    display: block;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 22px;
+    color: #fff;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+.rrboxarea span::before {
+    content: "";
+    position: absolute;
+    background-image: url(../img/result-divider.png);
+    width: 180px;
+    height: 13px;
+    top: 43px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+table.rr-table {
+    width: 100%;
+    margin-top: 15px;
+}
+.rr-table {
+    border: 2px solid #eee;
+    margin: auto;
+    width: 98% !important;
+    border-radius: 10px !important;
+}
+
+table.rr-table tr td {
+    padding: 8px 5px !important;
+    text-align: center;
+}
+
+a.horo-button {
+    position: absolute;
+    top: 50%;
+    left: 44%;
+    padding: 8px 20px !important;
+    border-radius: 10px;
+    display: inline-block;
+    margin-top: 4px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 5px 10px;
+}
+
+table.rr-table th, tr {
+    border-radius: 10px;
+    border: 1px solid #ccc !important;
+    padding: 5px 10px !important;
+    font-size: 14px;
+    text-align: center;
+}
+
+table.rr-table tr td {
+    padding: 8px 5px !important;
+    text-align: center;
+}
+
+.remd-tab thead, .remd-tab th, .remd-tab td, .remd-tab tbody, .remd-tab tr, .remd-tab tbody {
+    width: 26%;
+}

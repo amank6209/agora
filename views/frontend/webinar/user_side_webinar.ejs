@@ -1,0 +1,435 @@
+<%- include('../header') %>
+ 
+    
+    
+<div class="row">
+    <div>
+        <a onclick="simpleJoin()"><button type="button" id="audience-join" >Join webinar</button></a>
+        <button type="button" id="join_as_cohost" onclick="sendtalkRequest();" style="display: none;">Request to talk</button>
+        <button type="button" id="join_now_normal" onclick="cohost();sendNormal()" style="display: none;">Join Now Webinar</button>
+        <button type="button" id="join_now_private" onclick="cohost_private();sendPrivate()" style="display: none;">Join Now</button>
+        <button type="button" id="join_as_cohost_private" onclick="sendtalkRequestPrivate()" style="display: none;">Request to Private webinar</button>
+        <a onclick="userLeave()"><button type="button" id="leave">Leave</button></a>
+    </div>
+</div>
+    
+    
+<script>
+    
+    const currentUrl = window.location.pathname;
+    
+    let parse_url = currentUrl.split('/');
+
+    let txt = parse_url[2];
+ 
+    let numb = txt.match(/\d/g);
+    
+        numb = numb.join("");
+     
+    let uid = parseInt(numb);
+    
+    let channelName = parse_url[3];
+    
+     let session_name = JSON.stringify({
+        
+            channel_name: channelName,
+    }); 
+
+    var channelName2 = "";
+
+setInterval(function () {
+
+    axios.post('https://astroera.in/api/check-user-webinar',{
+
+          "user_id": options.uid,
+          "session_id": channelName,
+      },{
+         headers: {
+          'Content-Type': 'application/json'
+      }
+    }).then((data)=>{ 
+        
+      if(data != null){ 
+
+        if(data.data.form_meta !== undefined && data.data.data !== null){ 
+            
+            if(data.data.data.user_id == options.uid){
+                
+                if(data.data.form_meta == "Private call"){
+                   channelName2 = data.data.data.request_session_id;
+                   document.getElementById('join_now_private').style.display = "inline";
+                   document.getElementById('join_as_cohost_private').style.display = "none";
+                   document.getElementById('join_now_normal').style.display = "none";
+                   document.getElementById('join_as_cohost').style.display = "none";
+                   document.getElementById('audience-join').style.display = "none";
+                
+                }
+                if(data.data.form_meta == "Normal call"){
+                   channelName2 = data.data.data.request_session_id;
+                   document.getElementById('join_now_normal').style.display = "inline";
+                   document.getElementById('join_as_cohost_private').style.display = "none";
+                   document.getElementById('join_now_private').style.display = "none";
+                   document.getElementById('join_as_cohost').style.display = "none";
+                   document.getElementById('audience-join').style.display = "none";
+
+                }
+            }
+        }else{
+                //    document.getElementById('join_now_normal').style.display = "none";
+                //    document.getElementById('join_as_cohost_private').style.display = "none";
+                //    document.getElementById('join_now_private').style.display = "none";
+                //    document.getElementById('join_as_cohost').style.display = "none";
+                   
+        }
+       }
+    });
+
+}, 5000);
+    
+    
+let rtc = {
+    localAudioTrack: null,
+    localVideoTrack: null,
+    client: null,
+};
+
+let options = {
+    appId: '1e884982f1bf494495b45d0812f047de',
+    channel: channelName,
+    channel2: channelName2,
+    token: null,
+    uid: uid,
+};
+
+let clientRoleOptions = {
+    level: 1
+}
+
+
+async function startBasicLiveStreaming() {
+    
+    rtc.client = AgoraRTC.createClient({mode: "live", codec: "vp8", role: "host"});
+
+    rtc.client.on("user-published", async (user, mediaType) => {
+        
+        await rtc.client.subscribe(user, mediaType);
+        
+        if (mediaType === "video") {
+
+            const remoteVideoTrack = user.videoTrack;
+            const remotePlayerContainer = document.createElement("div");
+            remotePlayerContainer.id = user.uid.toString();
+            remotePlayerContainer.textContent = "Remote user " + user.uid.toString();
+            remotePlayerContainer.style.width = "640px";
+            remotePlayerContainer.style.height = "480px";
+            document.body.append(remotePlayerContainer);
+            remoteVideoTrack.play(remotePlayerContainer);
+        }
+        
+        if (mediaType === "audio") {
+            const remoteAudioTrack = user.audioTrack;
+            remoteAudioTrack.play();
+        }
+        
+        rtc.client.on("user-unpublished", user => {
+            const remotePlayerContainer = document.getElementById(user.uid);
+            remotePlayerContainer.remove();
+        });
+
+    });
+
+    window.onload = function () {
+
+            document.getElementById("audience-join").onclick = async function () {
+
+                await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+                rtc.client.setClientRole("audience", clientRoleOptions);
+                document.getElementById("audience-join").style.display = "none";
+                document.getElementById('join_as_cohost_private').style.display = "inline";
+                document.getElementById('join_as_cohost').style.display = "inline";
+
+            };
+
+            document.getElementById("leave").onclick = async function () {
+            
+                if(rtc.localAudioTrack != null){rtc.localAudioTrack.close()}
+                if(rtc.localVideoTrack != null){rtc.localVideoTrack.close()}
+
+                const localPlayerContainer = document.getElementById(options.uid);
+                if (localPlayerContainer) {
+                    localPlayerContainer.remove();
+                }
+
+                rtc.client.remoteUsers.forEach(user => {
+                    const playerContainer = document.getElementById(user.uid);
+                    playerContainer && playerContainer.remove();
+                });
+
+                await rtc.client.leave();
+
+                document.getElementById("audience-join").style.display = "inline";
+                document.getElementById("audience-join").disabled = false;
+                document.getElementById("join_as_cohost").style.display = "none";
+                document.getElementById("join_as_cohost_private").style.display = "none";
+                
+            };
+    };
+
+   
+}
+startBasicLiveStreaming();
+
+async function cohost(){
+
+
+            if(rtc.localAudioTrack != null){rtc.localAudioTrack.close()}
+            if(rtc.localVideoTrack != null){rtc.localVideoTrack.close()}
+
+            const localPlayerContainerr = document.getElementById(options.uid);
+            if (localPlayerContainerr) {
+                localPlayerContainerr.remove();
+            }
+           
+            rtc.client.remoteUsers.forEach(user => {
+                const playerContainer = document.getElementById(user.uid);
+                playerContainer && playerContainer.remove();
+            });
+
+            await rtc.client.leave();
+
+        rtc.client = AgoraRTC.createClient({mode: "live", codec: "vp8", role: "host"});
+
+        rtc.client.on("user-published", async (user, mediaType) => {
+        
+        await rtc.client.subscribe(user, mediaType);
+       
+            if (mediaType === "video") {
+                const remoteVideoTrack = user.videoTrack;
+                const remotePlayerContainer = document.createElement("div");
+                remotePlayerContainer.id = user.uid.toString();
+                remotePlayerContainer.textContent = "Remote user " + user.uid.toString();
+                remotePlayerContainer.style.width = "640px";
+                remotePlayerContainer.style.height = "480px";
+                document.body.append(remotePlayerContainer);
+                remoteVideoTrack.play(remotePlayerContainer);
+            }
+       
+            if (mediaType === "audio") {
+                 const remoteAudioTrack = user.audioTrack;
+                 remoteAudioTrack.play();
+            }
+        
+            rtc.client.on("user-unpublished", user => {
+                const remotePlayerContainer = document.getElementById(user.uid);
+                remotePlayerContainer.remove();
+            });
+        });
+
+
+    await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+
+    rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+    rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+    await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+
+    const localPlayerContainer = document.createElement("div");
+    localPlayerContainer.id = options.uid;
+    localPlayerContainer.textContent = "Local user " + options.uid;
+    localPlayerContainer.style.width = "640px";
+    localPlayerContainer.style.height = "480px";
+    document.body.append(localPlayerContainer);
+    rtc.localVideoTrack.play(localPlayerContainer);
+    
+    document.getElementById("audience-join").disabled = true;
+    document.getElementById("join_as_cohost").disabled = true;
+    document.getElementById("join_as_cohost_private").disabled = false;
+
+}
+
+
+async function cohost_private(){
+
+        if(rtc.localAudioTrack != null){rtc.localAudioTrack.close()}
+        if(rtc.localVideoTrack != null){rtc.localVideoTrack.close()}
+        
+        const localPlayerContainerr = document.getElementById(options.uid);
+        if (localPlayerContainerr) {
+            localPlayerContainerr.remove();
+        }
+
+        rtc.client.remoteUsers.forEach(user => {
+            const playerContainer = document.getElementById(user.uid);
+            playerContainer && playerContainer.remove();
+        });
+
+        await rtc.client.leave();
+
+        rtc.client = AgoraRTC.createClient({mode: "live", codec: "vp8", role: "host"});
+
+        rtc.client.on("user-published", async (user, mediaType) => {
+
+        await rtc.client.subscribe(user, mediaType);
+        
+            if (mediaType === "video") {
+                const remoteVideoTrack = user.videoTrack;
+                const remotePlayerContainer = document.createElement("div");
+                remotePlayerContainer.id = user.uid.toString();
+                remotePlayerContainer.textContent = "Remote user " + user.uid.toString();
+                remotePlayerContainer.style.width = "640px";
+                remotePlayerContainer.style.height = "480px";
+                document.body.append(remotePlayerContainer);
+                remoteVideoTrack.play(remotePlayerContainer);
+            }
+
+            if (mediaType === "audio") {
+                const remoteAudioTrack = user.audioTrack;
+                remoteAudioTrack.play();
+            }
+        
+            rtc.client.on("user-unpublished", user => {
+              const remotePlayerContainer = document.getElementById(user.uid);
+              remotePlayerContainer.remove();
+            });
+
+        });
+
+
+        await rtc.client.join(options.appId, channelName2, options.token, options.uid);
+      
+        rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+       
+        rtc.localVideoTrack = await AgoraRTC.createCameraVideoTrack();
+        
+        await rtc.client.publish([rtc.localAudioTrack, rtc.localVideoTrack]);
+        const localPlayerContainer = document.createElement("div");
+        localPlayerContainer.id = options.uid;
+        localPlayerContainer.textContent = "Local user " + options.uid;
+        localPlayerContainer.style.width = "640px";
+        localPlayerContainer.style.height = "480px";
+        document.body.append(localPlayerContainer);
+        rtc.localVideoTrack.play(localPlayerContainer);
+
+        document.getElementById("audience-join").disabled = true;
+        document.getElementById("join_as_cohost").disabled = false;
+        document.getElementById("join_as_cohost_private").disabled = true;
+
+}
+
+
+
+let senddata = JSON.stringify({
+            uid: uid,
+            channel: channelName,
+            type: 'Normal call',
+    });
+    
+    
+    
+      let sendtalkRequest = async function getData(){
+          const res = axios.post('https://astroera.in/api/user-private-webinar',senddata, {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then(async (response)=> {
+
+                  let buttonDesable = document.getElementById('join_as_cohost_private').style.display="none";
+                  document.getElementById('audience-join').style.display = "none";
+                
+                  
+            })
+        }
+
+
+
+let senddataPrivate = JSON.stringify({
+            uid: uid,
+            channel: channelName,
+            type: 'Private call',
+    });
+  
+let sendtalkRequestPrivate = async function getDataPrivate(){
+          const res = axios.post('https://astroera.in/api/user-private-webinar',senddataPrivate, {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then(async (response)=> {
+
+            let showPrivateButton = document.getElementById('join_now_private').style.display = "none";
+            document.getElementById('audience-join').style.display = "none";
+                
+            })
+        }
+
+function sendNormal(){
+
+          const res = axios.post('https://astroera.in/api/user-join-webinar',{
+            "uid":uid,
+            "channel":channelName2,
+            "type":'Normal call'
+          }, {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then(async (response)=> {
+
+            // console.log(response);
+                
+            })
+}
+
+ function simpleJoin(){
+
+    const res = axios.post('https://astroera.in/api/user-join-simple-webinar',{
+      "uid":uid,
+      "channel":channelName,
+      "type":'Simple Webinar'
+    }, {
+           headers: {
+          'Content-Type': 'application/json'
+      }
+    }).then(async (response)=> {
+
+      // console.log(response);
+
+      })
+   }
+
+function userLeave(){
+    const res = axios.post('https://astroera.in/api/user-leave-webinar',{
+      "uid":uid,
+      "channel":channelName,
+      "type":'Webinar Leave'
+    }, {
+           headers: {
+          'Content-Type': 'application/json'
+      }
+    }).then(async (response)=> {
+
+      // console.log(response);
+
+      })
+   }
+
+function sendPrivate(){
+
+          const res = axios.post('https://astroera.in/api/user-join-webinar',{
+            "uid":uid,
+            "channel":channelName2,
+            "type":'Private call'
+          }, {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          }).then(async (response)=> {
+
+        //    console.log(response);
+                
+            })
+        }
+
+
+        
+        
+</script>
+  
+<%- include('../footer') %>

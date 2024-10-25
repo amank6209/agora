@@ -1,0 +1,1335 @@
+
+    
+    <!--<button onclick="whole_kundali()">Show/Hide</button>-->
+    
+        <div class="bg-light bodyss">
+    <div class="card p-3 shadow"> 
+        <!--<h2 class="text-center p-3">Kundli</h2>-->
+        <nav >
+            <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist" >
+                <button onclick="get_basic_data()" class="nav-link active" id="nav-home-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home"
+                    aria-selected="true">Basic</button>
+                <button onclick="get_kundli_data()" class="nav-link" id="nav-Kundli-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-Kundli" type="button" role="tab" aria-controls="nav-Kundli"
+                    aria-selected="false">Kundli</button>
+                <button onclick="get_kp_data()" class="nav-link" id="nav-KP-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-KP" type="button" role="tab" aria-controls="nav-KP"
+                    aria-selected="false">KP</button>
+                <button onclick="get_astakvarga_data()" class="nav-link" id="nav-Ashtakvarga-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-Ashtakvarga" type="button" role="tab" aria-controls="nav-Ashtakvarga"
+                    aria-selected="false">Ashtakvarga</button>
+                <button onclick="get_chart_data()" class="nav-link" id="nav-Charts-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-Charts" type="button" role="tab" aria-controls="nav-Charts"
+                    aria-selected="false">Charts</button>
+                <button onclick="get_dasha_data()" class="nav-link" id="nav-Dasha-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-Dasha" type="button" role="tab" aria-controls="nav-Dasha"
+                    aria-selected="false">Dasha</button>
+                <button onclick="get_freePart_data()" class="nav-link" id="nav-free-report-tab" data-bs-toggle="tab"
+                    data-bs-target="#nav-free-report" type="button" role="tab" aria-controls="nav-free-report"
+                    aria-selected="false">Free
+                    Report</button>
+            </div>
+        </nav>
+
+
+
+        <div class="container">
+            <div class="tab-content bg-light" id="nav-tabContent">
+
+                <!--first page-->
+
+                <div class="tab-pane fade active show" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                    <input type="hidden" id="basic_json">
+                    <div class="first_page_div">
+                        <div class="rrboxarea" id="basic_details">
+                            <span>BIRTH DETAILS</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="basicdetailsfirstpage">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="rrboxarea" id="avakhada_details">
+                            <span>AVAKHADA DETAILS</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="avakadha_details_part">
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rrboxarea" id="basicpanchang_details">
+                            <span>BASIC PANCHANG DETAILS</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="basicpanchang_lower_part">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--kundli setion second page-->
+
+                <div class="tab-pane fade" id="nav-Kundli" role="tabpanel" aria-labelledby="nav-Kundli-tab">
+                    <input type="hidden" id="kundliD1">
+                    <div class="second_page_div">
+                        <div class="rrboxarea" id="D1_details">
+                            <span>Lagna / Ascendant / Basic Birth Chart</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="lagna_Ascendant_basic_chart">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="kundliD9">
+                    <div class="second_page_div">
+                        <div class="rrboxarea " id="navamsa_details">
+                            <span>Navamsa</span>
+                          
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="navamsa">
+
+                                    </table>
+                                </div>
+                            </div>
+
+                           
+                        </div>
+
+                    </div>
+
+
+                    <input type="hidden" id="kundli_planet">
+                    <div class="second_page_div">
+                        <div class="rrboxarea " id="planet_details">
+                            <span>Planet</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table">
+                                        <thead>
+                                            <th>Planet</th>
+                                            <th>Sign</th>
+                                            <th>Sign Lord</th>
+                                            <th>Nakshatra</th>
+                                            <th>Naksh Lord</th>
+                                            <th>Degree</th>
+                                            <th>Retro(R)</th>
+                                            <th>Combust</th>
+                                            <th>Avastha</th>
+                                            <th>House</th>
+                                            <th>Status</th>
+                                        </thead>
+                                        <tbody id="kundli_planetry_position"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+
+                    <div class="rrboxarea" id="planets_kundali_second_vimshottari_dasha_page_div">
+                        <span>Vimshottari Dasha</span>
+                        <div class="row">
+                            <div style="overflow-x:auto; padding:0;">
+
+                                <table class="rr-table hidden">
+                                    <thead>
+                                        <tr>
+                                            <th>Planet</th>
+                                            <th>Start Date</th>
+                                            <th>End Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="vimshottari_dasha_hide" id="maha_dasha">
+                                        <tr id="vimshottari_dasha">
+                                        </tr>
+                                    </tbody>
+
+                                    <tbody class="vimshottari_dasha_hide" id="antar_dasha" style="display:none">
+                                        <tr id="antar_dasha_data">
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="vimshottari_dasha_hide" id="pratyantar_dasha" style="display:none">
+                                        <tr id="pratyantar_dasha_data">
+                                        </tr>
+                                    </tbody>
+                                    <tbody class="vimshottari_dasha_hide" id="sookshma_dasha" style="display:none">
+                                        <tr id="sookshma_dasha_data">
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <ul class="head-right log-en">
+                                    <li class="nav-item list-group dropdown">
+
+                                        <a href="javascript:void(0)" class="rr-login rrlogin my_lavel my_lavel1"
+                                            onclick="back_step(1)" style="display:none">
+                                            Level Up
+                                        </a>
+                                        <a href="javascript:void(0)" class="rr-login rrlogin my_lavel my_lavel2"
+                                            onclick="back_step(2)" style="display:none">
+                                            Level Up
+                                        </a>
+                                        <a href="javascript:void(0)" class="rr-login rrlogin my_lavel my_lavel3"
+                                            onclick="back_step(3)" style="display:none">
+                                            Level Up
+                                        </a>
+
+                                    </li>
+                                </ul>
+
+                                <input type="hidden" id="vimshottari_dasha_data">
+                                <input type="hidden" id="plant_1">
+                                <input type="hidden" id="plant_2">
+                                <input type="hidden" id="plant_3">
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--third page-->
+
+                <div class="tab-pane fade" id="nav-KP" role="tabpanel" aria-labelledby="nav-KP-tab">
+                    <input type="hidden" id="bhav_chalit">
+                    <div class="third_page_div">
+                        <div class="rrboxarea" id="bhav_chalit_div">
+                            <span>Bhav Chalit Chart</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="bhavchalitchart">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="rrboxarea " id="kp_Planets_div">
+                            <input type="hidden" id="kp_Planets">
+                            <span>Planets</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table">
+                                        <thead>
+                                            <th>Planets</th>
+                                            <th>Full Degree</th>
+                                            <th>Speed</th>
+                                            <th>Sign</th>
+                                            <th>Sign Lord</th>
+                                            <th>Star Lord</th>
+                                            <th>Sub Lord</th>
+                                            <th>Is Retro</th>
+                                            <th>Is Combusted</th>
+                                        </thead>
+                                        <tbody id="kp_Planets_tabel"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                        <input type="hidden" id="kp_cusp">
+                        <div class="rrboxarea " id="kp_cusp_div">
+                            <span>Cusps</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table">
+                                        <thead>
+                                            <th>Cusp</th>
+                                            <th>Degree</th>
+                                            <th>Sign</th>
+                                            <th>Sign Lord</th>
+                                            <th>Star Lord</th>
+                                            <th>Sub Lord</th>
+                                        </thead>
+                                        <tbody id="Kp_Cusps_tabel"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+
+                    </div>
+                </div>
+
+                <!--fourth page-->
+
+                <div class="tab-pane fade" id="nav-Ashtakvarga" role="tabpanel" aria-labelledby="nav-Ashtakvarga-tab">
+
+                    <div class="fourth_page_div">
+                        <div class="rrboxarea" id="sav_chart">
+                            <span>Astakvarga</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <input type="hidden" id="astakvarga">
+                                    <input type="hidden" id="astakvarga_all">
+                                    <table class="rr-table" id="savchart"></table>
+                                    <table class="rr-table astakvarga_full ">
+                                        <tbody id="astakvarga_full"></tbody>
+                                    </table>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--fifth page-->
+
+                <div class="tab-pane fade" id="nav-Charts" role="tabpanel" aria-labelledby="nav-Charts-tab">
+                    <input type="hidden" id="chart_bhav_chalit">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="chart_bhav_chalit_div">
+                            <span>Bhav Chalit Chart</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="chart_bhavchalitchart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="chart_sun">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="chart_sun_div">
+                            <span>SUN</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="sunchart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="chart_moon">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="chart_moon_div">
+                            <span>Moon</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="moonchart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="chart_lagna">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea" id="chart_lagna_div">
+                            <span>Lagna / Ascendant / Basic Birth Chart</span>
+                            <div class="row">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="lagnachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="horo_lagna">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="chart_horo_div">
+                            <span>Horo Chart</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="horochart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="drekhanna_lagna">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_horo_div">
+                            <span>Drekkana (Relationship with siblings)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="drekkanachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="chaturthmasa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_chaturthmasa_div">
+                            <span>Chaturthamsa (Assets)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="chaturthmasachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="saptmasa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_saptmasa_div">
+                            <span>Saptamsa (Progeny)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="saptmasachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+
+
+                    <input type="hidden" id="navmasa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_navmasa_div">
+                            <span>Navamsa (Prospects of marriage)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="navmasachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="dasmasa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_dasmasa_div">
+                            <span>Dasamsa (Profession)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="dasmasachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="dwadasmasa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_dwadasmasa_div">
+                            <span>Dwadasamsa (Native parents / Ancestors)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="dwadasmasachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="shodasamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_shodasamsa_div">
+                            <span>Shodasamsa (Travel)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="shodasamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="vimsamsamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_vimsamsamsa_div">
+                            <span>Vimsamsa (Spiritual progress)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="vimsamsamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="chaturvimsamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_chaturvimsamsa_div">
+                            <span>Chaturvimsamsa (Intellectual)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="chaturvimsamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="saptavimsamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_saptavimsamsa_div">
+                            <span>Saptavimsamsa (Strength / Protection)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="saptavimsamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                         
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="trimsamsa ">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_trimsamsa_div">
+                            <span>Trimsamsa (Misfortunes)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="trimsamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                          
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="khavedamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_khavedamsa_div">
+                            <span>Khavedamsa (Auspicious time)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="khavedamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="akshavedamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_akshavedamsa_div">
+                            <span>Akshavedamsa (General issues)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="akshavedamsaachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                           
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="shastiamsa">
+                    <div class="fifth_page_div">
+                        <div class="rrboxarea " id="drekkana_shastiamsa_div">
+                            <span>Shastiamsa (Summary of charts)</span>
+                            <div class="row hidden">
+                                <div style="overflow-x:auto; padding:0;">
+                                    <table class="rr-table" id="shastiamsachart">
+
+                                    </table>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                </div>
+
+                <!--sixth page-->
+
+                <div class="tab-pane fade" id="nav-Dasha" role="tabpanel" aria-labelledby="nav-Dasha-tab">
+                    <nav>
+                        <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-Vimshottari-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-Vimshottari" type="button" role="tab"
+                                aria-controls="nav-Vimshottari" aria-selected="true">Vimshottari</button>
+                            <button class="nav-link" id="nav-Yogini-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-Yogini" type="button" role="tab" aria-controls="nav-Yogini"
+                                aria-selected="false">Yogini</button>
+                        </div>
+                    </nav>
+
+                    <div class="tab-content bg-light" id="nav-tabContent">
+                        <div class="tab-pane fade active show" id="nav-Vimshottari" role="tabpanel"
+                            aria-labelledby="nav-Vimshottari-tab">
+
+                            <input type="hidden" id="mahadasa">
+                            <div class="fifth_page_div">
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Sun Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_sun"></tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Moon Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_moon"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Mars Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_mars"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Mercury Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_mercury"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Venus Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_venus"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Saturn Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_saturn"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Jupiter Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_jupiter"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Ketu Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_ketu"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea" id="mahadasa_div">
+                                    <span>Rahu Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="mahadasatabel_rahu"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-Yogini" role="tabpanel" aria-labelledby="nav-Yogini-tab">
+                            <div class="rrboxarea " id="yogini_dasha_page_div">
+                                <span>Yogini Dasha</span>
+                                <div class="row hidden">
+                                    <div style="overflow-x:auto; padding:0;">
+
+                                        <table class="rr-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Planet</th>
+                                                    <th>Date</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="yogini_dasha_hide" id="yogini_dasha">
+                                                <tr id="yogini_dasha_data">
+                                                </tr>
+                                            </tbody>
+
+                                            <tbody class="yogini_dasha_hide" id="yogini_antar_dasha"
+                                                style="display:none">
+                                                <tr id="yogini_antar_dasha_data">
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                        <ul class="head-right log-en">
+                                            <li class="nav-item list-group dropdown">
+
+                                                <a href="javascript:void(0)"
+                                                    class="rr-login rrlogin my_lavel my_lavel14" onclick="back_steps()"
+                                                    style="display:none">
+                                                    Level Up
+                                                </a>
+
+                                            </li>
+                                        </ul>
+
+                                        <input type="hidden" id="yogini_dasha_data_all">
+                                        <input type="hidden" id="plante_1">
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--seventh page-->
+
+                <div class="tab-pane fade" id="nav-free-report" role="tabpanel" aria-labelledby="nav-free-report-tab">
+                    <nav>
+                        <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist">
+                            <button class="nav-link active" id="nav-General-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-General" type="button" role="tab" aria-controls="nav-General"
+                                aria-selected="true">General</button>
+                            <button class="nav-link" id="nav-Remedies-tab" data-bs-toggle="tab"
+                                data-bs-target="#nav-Remedies" type="button" role="tab" aria-controls="nav-Remedies"
+                                aria-selected="false">Remedies</button>
+                            <button class="nav-link" id="nav-Dosha-tab" data-bs-toggle="tab" data-bs-target="#nav-Dosha"
+                                type="button" role="tab" aria-controls="nav-Dosha" aria-selected="false">Dosha</button>
+
+                        </div>
+                    </nav>
+
+                    <div class="tab-content bg-light hidden" id="nav-tabContent">
+                        <div class="tab-pane fade active show" id="nav-General" role="tabpanel"
+                            aria-labelledby="nav-General-tab">
+                            <nav>
+                                <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist">
+                                    <button class="nav-link active" id="nav-General-new-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-General-new" type="button" role="tab"
+                                        aria-controls="nav-General-new" aria-selected="true">General</button>
+                                    <button class="nav-link" id="nav-Planetary-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-Planetary" type="button" role="tab"
+                                        aria-controls="nav-Planetary" aria-selected="false">Planetary</button>
+                                    <button class="nav-link" id="nav-Vimshottari_Dasha_new-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-Vimshottari_Dasha_new" type="button" role="tab"
+                                        aria-controls="nav-Vimshottari_Dasha_new" aria-selected="false">Vimshottari
+                                        Dasha</button>
+                                    <button class="nav-link" id="nav-Yoga_new-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-Yoga_new" type="button" role="tab"
+                                        aria-controls="nav-Yoga_new" aria-selected="false">Yoga </button>
+
+                                </div>
+                            </nav>
+                            <div class="tab-content bg-light" id="nav-tabContent">
+                                <div class="tab-pane fade active show" id="nav-General-new" role="tabpanel"
+                                    aria-labelledby="nav-General-new-tab">
+                                    <input type="hidden" id="freedata">
+                                    <div class="six_page_div">
+                                        <div class="rrboxarea" id="general">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="generaldata"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="nav-Planetary" role="tabpanel"
+                                    aria-labelledby="nav-Planetary-tab">
+                                    <div class="six_page_div">
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Sun Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data"></tr>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Moon Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_moon"></tr>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Mars Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_mars"></tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Mercury Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_mercury"></tr>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Venus Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_venus"></tr>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Saturn Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_saturn"></tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Jupiter Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_jupiter"></tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Ketu Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_ketu"></tr>
+                                                        </tbody>
+                                                       
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="rrboxarea" id="planet_analysis">
+                                            <span>Rahu Consideration</span>
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="planet_analysis_data_rahu"></tr>
+                                                        </tbody>
+                                                        
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="nav-Vimshottari_Dasha_new" role="tabpanel"
+                                    aria-labelledby="nav-Vimshottari_Dasha_new-tab">
+
+
+                                    <div class="rrboxarea">
+                                    <span>Sun Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_sun"></tr>
+                                                </tbody>
+                                            </table>
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Moon Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_moon"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Mars Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_mars"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Mercury Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_mercury"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Venus Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_venus"></tr>
+                                                </tbody>
+                                            </table>
+                                           
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Saturn Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_saturn"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Jupiter Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_jupiter"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Ketu Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_ketu"></tr>
+                                                </tbody>
+                                            </table>
+                                        
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="rrboxarea">
+                                    <span>Rahu Mahadasa</span>
+                                    <div class="row">
+                                        <div style="overflow-x:auto; padding:0;">
+
+                                            <table class="rr-table">
+                                                <tbody>
+                                                    <tr id="freemahadasatabel_rahu"></tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+
+
+                                    <!-- <div class="rrboxarea" id="free_mahadasa_div">
+                                        <div class="row">
+                                            <div style="overflow-x:auto;"> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_sun">
+                                                    <thead>
+                                                        <th>Sun Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_moon"> -->
+                                                    <!-- <thead>
+                                                        <th>Moon Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_mars">
+                                                    <thead>
+                                                        <th>Mars Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_mercury">
+                                                    <thead>
+                                                        <th>Mercury Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_venus">
+                                                    <thead>
+                                                        <th>Venus Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_saturn">
+                                                    <thead>
+                                                        <th>Saturn Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_jupiter">
+                                                    <thead>
+                                                        <th>Jupiter Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_ketu">
+                                                    <thead>
+                                                        <th>Ketu Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                                <!-- <table class="rr-table" id="freemahadasatabel_rahu">
+                                                    <thead>
+                                                        <th>Rahu Mahadasa</th>
+                                                    </thead>
+                                                </table> -->
+                                            <!-- </div>
+                                        </div>
+                                    </div> -->
+
+                                </div>
+                                <div class="tab-pane fade" id="nav-Yoga_new" role="tabpanel"
+                                    aria-labelledby="nav-Yoga_new-tab">
+
+                                    <div class="rrboxarea" id="free_yoga_div">
+                                        <div class="row">
+                                            <div style="overflow-x:auto; padding:0;">
+                                                <table class="rr-table" id="freeyoga"></table>
+                                            </div>
+                                        </div>
+                                      
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-Remedies" role="tabpanel" aria-labelledby="nav-Remedies-tab">
+
+                            <div class="tab-pane fade active show" id="nav-General" role="tabpanel"
+                                aria-labelledby="nav-General-tab">
+                                <nav>
+                                    <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist">
+                                        <button class="nav-link" id="nav-Gemstones-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-Gemstones" type="button" role="tab"
+                                            aria-controls="nav-Gemstones" aria-selected="false">Gemstone</button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content bg-light" id="nav-tabContent">
+                                    <div class="tab-pane fade" id="nav-Gemstones" role="tabpanel"
+                                        aria-labelledby="nav-Gemstones-tab">
+                                        <div class="rrboxarea" id="free_gemstone_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table remd-tab">
+                                                        <tbody>
+                                                            <tr id="freegemstone"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                          
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="nav-Dosha" role="tabpanel" aria-labelledby="nav-Dosha-tab">
+                            <div class="tab-pane fade active show" id="nav-General" role="tabpanel"
+                                aria-labelledby="nav-General-tab">
+                                <nav>
+                                    <div class="nav nav-tabs nav-btns" id="nav-tab" role="tablist">
+                                        <button class="nav-link active" id="nav-Manglik-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-Manglik" type="button" role="tab"
+                                            aria-controls="nav-Manglik" aria-selected="true">Manglik</button>
+                                        <button class="nav-link" id="nav-Kalsarpa-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-Kalsarpa" type="button" role="tab"
+                                            aria-controls="nav-Kalsarpa" aria-selected="false">Kalsarpa</button>
+                                        <button class="nav-link" id="nav-Sadesati-tab" data-bs-toggle="tab"
+                                            data-bs-target="#nav-Sadesati" type="button" role="tab"
+                                            aria-controls="nav-Sadesati" aria-selected="false">Sadesati</button>
+                                    </div>
+                                </nav>
+                                <div class="tab-content bg-light" id="nav-tabContent">
+                                    <div class="tab-pane fade active show" id="nav-Manglik" role="tabpanel"
+                                        aria-labelledby="nav-Manglik-tab">
+                                        <div class="rrboxarea" id="free_manglik_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table" id="">
+                                                        <tbody>
+                                                            <tr id="freemanglik"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+
+                                    <div class="tab-pane fade" id="nav-Kalsarpa" role="tabpanel"
+                                        aria-labelledby="nav-Kalsarpa-tab">
+                                        <div class="rrboxarea" id="free_kaal_sarp_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table" id="freekaalsarp"></table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="nav-Sadesati" role="tabpanel"
+                                        aria-labelledby="nav-Sadesati-tab">
+
+                                        <div class="rrboxarea" id="free_sadhe_sati_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <thead>
+                                                            <th>Date</th>
+                                                            <th>Sign name</th>
+                                                            <th>Phase</th>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr id="freesadhesatii"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="rrboxarea" id="free_sadhe_sati_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="freesadhesati"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="rrboxarea" id="free_sadhe_sati_div">
+                                            <div class="row">
+                                                <div style="overflow-x:auto; padding:0;">
+                                                    <table class="rr-table">
+                                                        <tbody>
+                                                            <tr id="freesadhesati_remedie"></tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+

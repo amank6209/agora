@@ -1,0 +1,387 @@
+<%- include('../header') %>
+      
+  <div class="vc">
+      
+        <div class="sub-vc rounded shadow-lg user_side_cl">
+            <div class="vc-head">
+                <p>User Side</p>
+                <div timer  class="timer">Time remain : <span id='timer'></span></div>
+            </div>
+            <p id="leaveing_message" class="leave"></p>
+
+            <i class="fa fa-microphone-slash" id="muted_mic" aria-hidden="true " style="color: red; display: none;"></i>
+            
+            <div id="remote" class="rounded remote shaow-lg "><p class="circle" id="nameShow"></p></div>
+            
+            <div class="vc-plugs">
+                
+                <i class="fa fa-microphone " id="btnMic" aria-hidden="true "></i>
+                 
+                <!-- <button type="button" id="join">Join</button> -->
+                <button type="button" id="leave">Leave</button>
+            </div>
+            
+
+        </div>
+
+    </div>
+    
+  
+    <script>
+    
+    const currentUrl = window.location.pathname;
+    
+    let parse_url = currentUrl.split('/');
+    
+    let txt = parse_url[2];
+    
+    let numb = txt.match(/\d/g);
+    
+        numb = numb.join("");
+    
+    let uid = parseInt(numb);
+    
+    let channelName = parse_url[3];
+    
+     let session_name = JSON.stringify({
+        
+            channel_name: channelName,
+    }); 
+    
+    
+    
+    let totalSeconds = "";
+
+    let fiveMinutes  = "";
+    
+   
+let getSessionDetails = function session_details(){
+        axios.post('https://astroera.in/api/astro-call/exportSessionDetails',session_name,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(async function(response)  {
+            
+            totalSeconds = await(Math.floor((response.data.total_time)*60));
+
+            fiveMinutes = await totalSeconds;
+                 
+            request_status = await (response.data.request_status);
+
+            if(request_status == 5){
+                window.location.href="https://astroera.in/";
+            }else if(request_status == 7){
+                window.location.href="https://astroera.in/";
+            }else if(request_status == 8){
+                window.location.href="https://astroera.in/";
+            }else{
+                await startOneToOneAudioCall();
+                await userJoin();
+            } 
+          
+            })
+    }
+
+getSessionDetails();
+
+
+function astroNameGet(){
+
+    axios.post('https://astroera.in/api/new-ongoing-sessions',{"user_id":uid},{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+            }).then(async function(data) {
+
+                let astroname = data.data.astro_details.name;
+
+                document.getElementById('nameShow').innerHTML = await (astroname.substring(0, 1));
+
+            });
+}
+
+astroNameGet();
+
+
+const config = {
+    mode: 'rtc',
+    codec: 'vp8'
+}
+
+const options = {
+    appId: '1e884982f1bf494495b45d0812f047de',
+    channel: channelName,
+    token: "",
+    uid: uid,
+
+}
+
+// Retrieve a token from your token server
+
+    
+    let data = JSON.stringify({
+            uid: uid,
+            channel: channelName,
+            role: 'publisher',
+            tokentype: 'uid',
+    });
+    
+    
+    
+      let gettingdata = function getData(){
+          const res = axios.post('/fetch_rtc_token',data , {
+                 headers: {
+                'Content-Type': 'application/json'
+            }
+          })
+        return (res.then(async function(response){
+                 let token = response.data.rtcToken;
+                 options.token = token;
+            }))
+        }
+     
+     gettingdata();
+     
+     
+     //  user room join
+     
+    let user_update_join = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "User",
+            roomEntryType: 'roomEnter',
+    }); 
+     
+    let userJoin =async function user_join(){
+        axios.post('https://astroera.in/api/astro-call/status-update',user_update_join,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+    }
+    
+    
+    // user_room_leave
+    
+     let user_update_leave = JSON.stringify({
+        
+            session_id: channelName,
+            user_role: "User",
+            roomEntryType: 'roomLeave',
+    }); 
+     
+    let userLeave =async function user_leave(){
+        axios.post('https://astroera.in/api/astro-call/status-update',user_update_leave,{
+               headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(()=>{
+            window.location.href="https://astroera.in/";
+        })
+    }
+
+
+let rtc = {
+    localAudioTrack: null,
+    client: null
+};
+        const leavebtn = $('#leave');
+        // const joinbtn = $('#join');
+        const btnMic = $('#btnMic');
+        
+        const join = async() => {
+            rtc.client = AgoraRTC.createClient(config);
+            await rtc.client.join(options.appId, options.channel, options.token, options.uid);
+        }
+        
+        async function startOneToOneAudioCall() {
+            join().then(() => {
+                
+                startAudio();
+
+                 setTimeout(()=>{
+                          
+                            if(rtc.client._users.length == 1){
+                                console.log("one user is there");
+                              }else{
+                                window.location.href="https://astroera.in/";
+                               }
+                             },180000);
+                
+                rtc.client.on("user-published", async (user, mediaType) => {
+
+                    document.getElementById('muted_mic').style.display = 'none';
+                                                
+                    await rtc.client.subscribe(user, mediaType);
+                        
+                        if(totalSeconds !== ""){
+                          
+                              if(user.uid){
+                                    display = $('#timer');
+                                    startTimernew(fiveMinutes, display);
+                              }
+                              
+                          }else{
+                              
+                            setTimeout(function(){
+                              if(user.uid){
+                                    display = $('#timer');
+                                    startTimernew(fiveMinutes, display);
+                              }
+                            },9000);
+                      
+                           }
+     
+                    if (mediaType === "audio") {
+                        const remoteAudioTrack = user.audioTrack;
+                        remoteAudioTrack.play();
+                    }
+                    
+                });
+
+
+                rtc.client.on("user-left",(f,g)=>{
+                      
+                    if(g === 'Quit'){
+
+                         setTimeout(()=>{userLeave();},1000);
+                        
+                        document.getElementById('leaveing_message').innerHTML = "Astrologer left";
+                    }
+
+                });
+                
+                rtc.client.on("user-unpublished",async (user) => {
+
+                    await rtc.client.unsubscribe(user);
+
+                    document.getElementById('muted_mic').style.display = 'inline';
+
+
+                   });
+  
+                });
+            
+                
+        }
+        
+        
+        
+        const startAudio = async() => {
+            rtc.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+            rtc.client.publish(rtc.localAudioTrack);
+            rtc.localAudioTrack.play();
+        }
+        
+        
+        const stopAudio = () => {
+            rtc.localAudioTrack.close();
+            rtc.localAudioTrack.stop();
+            rtc.client.unpublish(rtc.localAudioTrack);
+        }
+
+
+
+        leavebtn.click( async function(){
+
+            rtc.localAudioTrack.close();
+            await rtc.client.leave();
+            userLeave();
+
+        });
+
+        // joinbtn.click( async function(){
+
+        //     if(request_status == 5){
+        //             window.location.href="https://astroera.in/";
+        //         }else if(request_status == 7){
+        //             window.location.href="https://astroera.in/";
+        //         }else if(request_status == 8){
+        //             window.location.href="https://astroera.in/";
+        //         }else{
+        //             startOneToOneAudioCall();
+        //             userJoin();  
+        //         }
+
+        // });
+
+        //Toggle Microphone
+
+        btnMic.click(function() {
+            if ($(this).hasClass('fa-microphone')) {
+                $(this).addClass('fa-microphone-slash');
+                $(this).removeClass('fa-microphone');
+                $(this).css('color', 'red');
+                stopAudio()
+        
+            } else {
+                $(this).addClass('fa-microphone');
+                $(this).removeClass('fa-microphone-slash');
+                $(this).css('color', 'white');
+                startAudio();
+        
+        
+            }
+        });
+
+         var minutes;
+         var seconds;
+          
+            let startTime = function () {
+                
+               
+                minutes = parseInt(totalSeconds / 60, 10);
+                seconds = parseInt(totalSeconds % 60, 10);
+                minutes = minutes < 10 ? minutes : minutes;
+                seconds = seconds < 10 ? seconds : seconds;
+                
+                document.getElementById('timer').innerHTML = (`${minutes} minutes : ${seconds} seconds`);
+                
+                if (--totalSeconds < 0) {
+                    
+                    rtc.client.leave();
+                    stopAudio();
+                                      
+                    userLeave();
+                    
+                    console.log("timer goes -ve");
+                    
+                   return ;
+                    
+                }
+            }
+                
+                
+        function startTimer() {
+          intervalId = setInterval(startTime,1000);
+        }
+        
+        
+        function clearTimer() {
+          clearInterval(intervalId);
+        }
+              
+
+     function startTimernew(duration, display) {
+            var timer = duration, minutes, seconds;
+            setInterval(function () {
+                minutes = parseInt(timer / 60, 10)
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.text(minutes + ":" + seconds);
+                if (--timer < 0) {
+                    timer = duration;
+                    rtc.client.leave();
+                    stopAudio();
+                    userLeave();
+                }
+
+            }, 1000);
+        }
+        
+        
+</script>
+  
+<%- include('../footer') %>
