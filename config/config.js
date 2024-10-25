@@ -1,4 +1,8 @@
+// PORT = 3006
 
+// APP_ID=1e884982f1bf494495b45d0812f047de
+
+// APP_CERTIFICATE=6ef22df513d1420b85f75bf3957d6b39
 
 const config = {
   db: {
