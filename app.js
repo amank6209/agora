@@ -15,9 +15,9 @@ app.use(bodyParser.json({limit: '900kb'}));
 
 app.use(express.static(__dirname + '../public'));
 
-const port = process.env.PORT
+const port = process.env.PORT || 3006
 
-const APP_ID = process.env.APP_ID;
+const APP_ID = process.env.APP_ID || '1e884982f1bf494495b45d0812f047de';
 const APP_CERTIFICATE = process.env.APP_CERTIFICATE;
 
 const nocache = (_, resp, next) => {
